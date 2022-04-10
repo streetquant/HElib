@@ -74,19 +74,14 @@ def factorize(n):
   """
 
   if n < 1:
-    raise ValueError("No prime factors for %s" % n)
+    raise ValueError(f"No prime factors for {n}")
 
   factors = defaultdict(int)
   if n == 1:
     return factors # Empty dict - nothing to iterate through
 
   # Factor path global - run once
-  if factorPath != None:
-    res = subprocess.run([factorPath, str(n)], stdout=subprocess.PIPE, universal_newlines=True)
-    # ignore first numer - the dividend
-    factors = map( int, res.stdout.split()[1:] )
-    return defaultdict(int, Counter(factors))
-  else:
+  if factorPath is None:
     # This uses far less memory than using nextPrime
     for p in twoandOdds(math.ceil(n/2)+1):
       while n % p == 0 and n != 1:
@@ -98,6 +93,11 @@ def factorize(n):
     if not any(factors):
       factors[n] = 1 # Must be prime.
 
+  else:
+    res = subprocess.run([factorPath, str(n)], stdout=subprocess.PIPE, universal_newlines=True)
+    # ignore first numer - the dividend
+    factors = map( int, res.stdout.split()[1:] )
+    return defaultdict(int, Counter(factors))
   return factors
 
 

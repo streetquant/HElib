@@ -21,15 +21,13 @@ def nSlotsFromParamsOutFile(filename):
     with open(filename) as f:
         pattern = re.compile(r"\s*nslots\s*=\s*(\d+)\s*")
         for line in f:
-            match = pattern.fullmatch(line)
-            if match:
-                return int(match.group(1))
+            if match := pattern.fullmatch(line):
+                return int(match[1])
         return None
 
 def parsePtxtGetSlots(iterable):
     for ptxt in iterable:
-        for slot in ptxt:
-            yield slot
+        yield from ptxt
 
 def printoutNums(ptxts, nelements):
     for slot in islice(parsePtxtGetSlots(ptxts), nelements):

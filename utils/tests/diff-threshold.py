@@ -29,13 +29,11 @@ def makeSameSize(a, b, max_length):
         raise ValueError(f"Size of slots for {a}({lenA}) {b}({lenB}) "
                          f"> {max_length}.")
 
-    if lenA == lenB:
-        return a, b
-    else:
+    if lenA != lenB:
         maxSz = max(lenA, lenB)
         a += [0] * (maxSz - lenA)
         b += [0] * (maxSz - lenB)
-        return (a, b)
+    return a, b
 
 def parseCorrectly(la, lb, decrypt):
     error_msg = "Type mismatch. {0}({1}) and {2}({3}) type do not match."

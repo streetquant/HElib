@@ -20,6 +20,6 @@ elif args.scheme == "CKKS":
     fn = functools.partial(sigmoid, s=args.lines*args.columns/2)
 
 print(args.lines)
-for i in range(0, args.lines):
+for i in range(args.lines):
     row = [fn(j) for j in range(i*args.columns, (i+1)*args.columns)]
     print(*row, sep=', ')
