@@ -24,9 +24,8 @@ def nSlotsFromParamsOutFile(filename):
     with open(filename) as f:
         pattern = re.compile(r"\s*nslots\s*=\s*(\d+)\s*")
         for line in f:
-            match = pattern.fullmatch(line)
-            if match:
-                return int(match.group(1))
+            if match := pattern.fullmatch(line):
+                return int(match[1])
         return None
 
 def getVersion():
@@ -38,14 +37,14 @@ def printEmptyPtxts(amount, nslots, scheme):
     for _ in range(amount):
         print(f'{{"HElibVersion":"{getVersion()}","content":{{"scheme":"{scheme}","slots":', end='')
         print(f'{[filler] * nslots}'.replace(', ', ','), end='')
-        print(f'}},"serializationVersion":"0.0.1","type":"Ptxt"}}')
+        print('}},"serializationVersion":"0.0.1","type":"Ptxt"}}')
 
 def printPtxts(ptxts, header, scheme):
-    print(str(header))
+    print(header)
     for ptxt in ptxts:
         print(f'{{"HElibVersion":"{getVersion()}","content":{{"scheme":"{scheme}","slots":', end='')
         print(f'{ptxt}'.replace(', ', ','), end='')
-        print(f'}},"serializationVersion":"0.0.1","type":"Ptxt"}}')
+        print('}},"serializationVersion":"0.0.1","type":"Ptxt"}}')
 
 def genSlot(csv, scheme):
     fn = int if scheme == "BGV" else float
@@ -56,7 +55,7 @@ def genPtxt(csv, nslots, scheme):
     filler = [0] if scheme == "BGV" else [0.0]
     slots = genSlot(csv, scheme)
     while True:
-        ptxt = [ slot for slot in islice(slots, nslots) ]
+        ptxt = list(islice(slots, nslots))
         if not ptxt:
           break
         ptxt.extend([filler] * (nslots - len(ptxt)))
@@ -66,7 +65,7 @@ class MatrixDims:
 
     def __init__(self, s):
         self.dims = tuple(map(int, s.split(",")))
-        if len(self.dims) < 1:
+        if not self.dims:
             raise ValueError("Tuple length in MatrixDims < 1.")
 
     def __str__(self):

@@ -24,10 +24,10 @@ def getVersion():
         return f.readline().replace('\n', '')
 
 def modCoeffsInSlots(listOfLists, p):
-    return list([coeff % p for coeff in slot ] for slot in listOfLists)
+    return [[coeff % p for coeff in slot ] for slot in listOfLists]
 
 def modRecord(record, p):
-    return list( modCoeffsInSlots(datum, p) for datum in record )
+    return [modCoeffsInSlots(datum, p) for datum in record]
 
 def checkSame(a_iter, b_iter):
     return [ [1] if a == b else [0] for a, b in zip(a_iter, b_iter) ]
@@ -98,11 +98,11 @@ class TestType:
                "SCORE": scoreTest
             }
 
-    def parse(s):
+    def parse(self):
         for k, v in TestType.funcs.items():
-            if s == k:
+            if self == k:
                 return v
-        raise ValueError(f"Invalid test option: '{s}'.")
+        raise ValueError(f"Invalid test option: '{self}'.")
 
 def parseHeader(line):
     return tuple(int(x) for x in line.split())
@@ -123,7 +123,7 @@ def main():
     parser.add_argument("--test", help="which test", type=TestType.parse)
     args = parser.parse_args()
 
-    testFn = args.test if args.test else isSameTest
+    testFn = args.test or isSameTest
     if not testFn:
         print("Given an invalid test type.", file=sys.stderr)
         sys.exit(1)
@@ -138,7 +138,7 @@ def main():
         for record in records:
             print(f'{{"HElibVersion":"{getVersion()}","content":{{"scheme":"BGV","slots":', end='')
             print(testFn(record, querydata).__str__().replace(', ', ','), end='')
-            print(f'}},"serializationVersion":"0.0.1","type":"Ptxt"}}')
+            print('}},"serializationVersion":"0.0.1","type":"Ptxt"}}')
 
 if __name__ == "__main__":
     main()

@@ -87,7 +87,7 @@ def parsePrimeRange(rangeStr):
               filter(lambda x: numth.factorize(x)[x] == 1, \
               parseRange(rangeStr))\
             )
-  if len(p_prime) == 0:
+  if not p_prime:
     raise argparse.ArgumentTypeError("No primes found in range given.")
 
   return p_prime
@@ -154,7 +154,7 @@ def printTable( headers, data, colwidths=None ):
             24       5       2       8       4
             12       5       2       4       2
   """
-  if colwidths == None:
+  if colwidths is None:
     colwidths = [12]*len(headers)
   else:
     colwidths = [ width+2 if width > 8 else 8 for width in colwidths ]
